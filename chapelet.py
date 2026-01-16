@@ -1,46 +1,31 @@
 #!/usr/bin/env python3
 
-import sys
-import subprocess
+import argparse
 import time
 from pathlib import Path
+import pygame
 
-# -----------------------------
-# INSTALLATION DES DÉPENDANCES
-# -----------------------------
+parser = argparse.ArgumentParser(
+    description="Rosary recitation"
+)
 
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+parser.add_argument(
+    "-full",
+    action="store_true",
+    help="Pray the full rosary (4 chaplets / 20 mysteries)"
+)
 
-try:
-    import pygame
-except ImportError:
-    print("pygame not found, installing...")
-    install("pygame")
-    import pygame
-
-
-# -----------------------------
-# INITIALISATION AUDIO
-# -----------------------------
+args = parser.parse_args()
 
 pygame.mixer.init()
 
-# Dossier contenant les fichiers audio
-sfx = Path("sfx")
-
-if not sfx.exists():
-    print(f"Error: {sfx} folder does not exist.")
-    sys.exit(1)
-
-# -----------------------------
-# FONCTIONS AUDIO
-# -----------------------------
+BASE_DIR = Path(__file__).parent
+SFX_DIR = BASE_DIR / "sfx"
 
 def play(file):
-    path = sfx / file
+    path = SFX_DIR / file
     if not path.exists():
-        print(f"Missing file : {file}")
+        print(f"Missing audio file: {file}")
         return
 
     pygame.mixer.music.load(str(path))
@@ -48,7 +33,6 @@ def play(file):
 
     while pygame.mixer.music.get_busy():
         time.sleep(0.1)
-
 
 def profession():
     play("credo.wav")
@@ -62,32 +46,70 @@ def gloire():
 def jevoussaluemarie():
     play("ave.wav")
 
-
 def jvsm3():
     for _ in range(3):
         jevoussaluemarie()
 
-
-def mystery():
+def decade():
     for _ in range(10):
         jevoussaluemarie()
 
+JOYFUL = [
+    "The Annunciation",
+    "The Visitation",
+    "The Nativity",
+    "The Presentation",
+    "The Finding in the Temple",
+]
 
-# -----------------------------
-# DÉROULEMENT DU CHAPELET
-# -----------------------------
+SORROWFUL = [
+    "The Agony in the Garden",
+    "The Scourging at the Pillar",
+    "The Crowning with Thorns",
+    "The Carrying of the Cross",
+    "The Crucifixion",
+]
 
-print("✝ Cross sign ✝")
+GLORIOUS = [
+    "The Resurrection",
+    "The Ascension",
+    "The Descent of the Holy Spirit",
+    "The Assumption",
+    "The Coronation of Mary",
+]
 
-profession()
-notrepere()
-jvsm3()
-gloire()
+LUMINOUS = [
+    "The Baptism of Christ",
+    "The Wedding at Cana",
+    "The Proclamation of the Kingdom",
+    "The Transfiguration",
+    "The Institution of the Eucharist",
+]
 
-for i in range(5):
-    print(f"Mystère {i + 1}")
+def chaplet_with_mysteries(mysteries, chaplet_name):
+    print(f"\n📿 {chaplet_name} Mysteries 📿\n")
+
+    profession()
     notrepere()
-    mystery()
+    jvsm3()
     gloire()
 
-print("🙏 The Lord be with you 🙏")
+    for i, mystery_name in enumerate(mysteries, start=1):
+        print(f"— Mystery {i}: {mystery_name}")
+        notrepere()
+        decade()
+        gloire()
+
+if __name__ == "__main__":
+
+    if args.full:
+        print("🙏 Full Rosary (4 Chaplets)\n")
+        chaplet_with_mysteries(JOYFUL, "Joyful")
+        chaplet_with_mysteries(SORROWFUL, "Sorrowful")
+        chaplet_with_mysteries(GLORIOUS, "Glorious")
+        chaplet_with_mysteries(LUMINOUS, "Luminous")
+    else:
+        print("🙏 Single Chaplet\n")
+        chaplet_with_mysteries(JOYFUL, "Joyful")
+
+    print("\n✝ The Lord be with you ✝\n")
