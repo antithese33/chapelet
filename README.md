@@ -6,6 +6,7 @@ For now, it only has basic Text-To-Speech, UI is barebones, only one voice,
 it must be executed from the shell.
 
 - Added support for a full rosary (using -full)
+- Added support for classic rosary (using -full -classic)
 
 This is subject to change as I've got some time to work on it.
 
