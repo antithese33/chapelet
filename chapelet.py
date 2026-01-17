@@ -12,7 +12,13 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "-full",
     action="store_true",
-    help="Pray the full rosary (4 chaplets / 20 mysteries)"
+    help="Pray the full rosary"
+)
+
+parser.add_argument(
+    "-classic",
+    action="store_true",
+    help="Classic rosary (Joyful, Sorrowful, Glorious only)"
 )
 
 args = parser.parse_args()
@@ -35,16 +41,16 @@ def play(file):
         time.sleep(0.1)
 
 def profession():
-    play("credo.wav")
+    play("profession.wav")
 
 def notrepere():
-    play("pater.wav")
+    play("notrepere.wav")
 
 def gloire():
-    play("gloria.wav")
+    play("gloire.wav")
 
 def jevoussaluemarie():
-    play("ave.wav")
+    play("jvsm.wav")
 
 def jvsm3():
     for _ in range(3):
@@ -103,13 +109,19 @@ def chaplet_with_mysteries(mysteries, chaplet_name):
 if __name__ == "__main__":
 
     if args.full:
-        print("🙏 Full Rosary (4 Chaplets)\n")
-        chaplet_with_mysteries(JOYFUL, "Joyful")
-        chaplet_with_mysteries(SORROWFUL, "Sorrowful")
-        chaplet_with_mysteries(GLORIOUS, "Glorious")
-        chaplet_with_mysteries(LUMINOUS, "Luminous")
+        if args.classic:
+            print("🙏 Classic Full Rosary (3 Chaplets)\n")
+            chaplet_with_mysteries(JOYFUL, "Joyful")
+            chaplet_with_mysteries(SORROWFUL, "Sorrowful")
+            chaplet_with_mysteries(GLORIOUS, "Glorious")
+        else:
+            print("🙏 Full Rosary (4 Chaplets)\n")
+            chaplet_with_mysteries(JOYFUL, "Joyful")
+            chaplet_with_mysteries(SORROWFUL, "Sorrowful")
+            chaplet_with_mysteries(GLORIOUS, "Glorious")
+            chaplet_with_mysteries(LUMINOUS, "Luminous")
     else:
         print("🙏 Single Chaplet\n")
         chaplet_with_mysteries(JOYFUL, "Joyful")
 
-    print("\n✝ The Lord be with you ✝\n")
+    print("\n✝ End of prayer ✝\n")
