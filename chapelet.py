@@ -41,16 +41,16 @@ def play(file):
         time.sleep(0.1)
 
 def profession():
-    play("profession.wav")
+    play("credo.wav")
 
 def notrepere():
-    play("notrepere.wav")
+    play("pater.wav")
 
 def gloire():
-    play("gloire.wav")
+    play("gloria.wav")
 
 def jevoussaluemarie():
-    play("jvsm.wav")
+    play("ave.wav")
 
 def jvsm3():
     for _ in range(3):
